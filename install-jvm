@@ -9,6 +9,13 @@ help() {
     echo "Due to the usage of the update-alternatives and update-java-alternative"
     echo "commands, elevated permissions are required to execute this program."
     echo ""
+    echo "Since many applications use the JAVA_HOME environment variable to identify"
+    echo "the location of the JDK they are supposed to use, this program writes the"
+    echo "correct value for the variable into /etc/environment. However, since the"
+    echo "calling shell's environment cannot be changed from within this program, you"
+    echo "will have to execute 'source /etc/environment' if you want to use the updated"
+    echo "JDK within the context of this shell."
+    echo ""
     echo "Mandatory arguments to long options are mandatory for short options too."
     echo "  -a, --archive          use existing tar archive at this location or download"
     echo "                         archive to this location if -d is also set"
@@ -34,14 +41,6 @@ help() {
     echo "GitHub repository for the project: https://github.com/Visparu/unix-tools"
     echo "For questions or feature requests, please open an issue there."
 }
-
-# check for sudo permissions
-if [ $(id -u) -ne 0 ]; then
-    >&2 echo "Program must be executed with root privileges."
-    >&2 echo ""
-    help
-    exit 100
-fi
 
 x=n d=n t=n a=n e=n n=n j=n
 while [ $# -gt 0 ]; do
@@ -92,6 +91,14 @@ while [ $# -gt 0 ]; do
             ;;
     esac
 done
+
+# check for sudo permissions
+if [ $(id -u) -ne 0 ]; then
+    >&2 echo "Program must be executed with root privileges."
+    >&2 echo ""
+    help
+    exit 100
+fi
 
 # handle non-option arguments
 if [[ $# -ne 0 ]]; then
@@ -194,3 +201,5 @@ do
 done
 
 update-java-alternatives --set $ALTERNATIVE_NAME
+
+sed -i "/JAVA_HOME=/c\\JAVA_HOME=$FULL_ALTERNATIVE_PATH" /etc/environment
