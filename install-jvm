@@ -218,4 +218,5 @@ done
 
 update-java-alternatives --set $ALTERNATIVE_NAME
 
-sed -i "/JAVA_HOME=/c\\JAVA_HOME=$FULL_ALTERNATIVE_PATH" /etc/environment
+sed -i "/JAVA_HOME=/d" /etc/environment
+echo "JAVA_HOME=$FULL_ALTERNATIVE_PATH" >> /etc/environment
