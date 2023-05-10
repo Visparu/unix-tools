@@ -134,6 +134,9 @@ if [ -z ${JAVA_ALTERNATIVE_DIR+x}]; then
 fi
 
 FULL_ALTERNATIVE_PATH=$JAVA_ALTERNATIVE_DIR/$ALTERNATIVE_NAME  
+
+apt-get -qq update
+apt-get -qq install -y java-common
   
 # check for update argument
 if [ $u != "y" ]; then
@@ -178,6 +181,7 @@ if [ $u != "y" ]; then
   
   # move JDK to java-alternatives directory
   rm -rf $FULL_ALTERNATIVE_PATH
+  mkdir -p $JAVA_ALTERNATIVE_DIR
   mv $EXTRACT_DIR/$(ls -A $EXTRACT_DIR) $FULL_ALTERNATIVE_PATH
   if [ ! -d $FULL_ALTERNATIVE_PATH ]; then
       >&2 echo "Moving the JDK to the alternative path failed."
